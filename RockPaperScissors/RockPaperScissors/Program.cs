@@ -1,4 +1,6 @@
-﻿namespace RockPaperScissors
+﻿
+
+namespace RockPaperScissors
 {
 
 
@@ -14,7 +16,7 @@
                 Console.WriteLine("~ ROCK PAPER SCISSORS ~");
                 Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~");
                 Console.WriteLine("[1] Play Game");
-                Console.WriteLine("[2] Read Rules");
+                Console.WriteLine("[2] Test SQL Connection: User");
                 Console.WriteLine("[3] Exit");
 
                 string input = Console.ReadLine();
@@ -28,6 +30,11 @@
                         PlayGame();
                         break;
                     case 2:
+                        Console.WriteLine("Running SQLClient: User..");
+                        TableDatabaseConnection.SqlToConsole();
+                        Console.WriteLine("Finished");
+
+
                         break;
                     case 3:
                         break;
@@ -37,7 +44,34 @@
             }
             catch (Exception e)
             {
-                Console.WriteLine("ERROR");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Error Message:");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(e.Message);
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Error Source:");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(e.Source);
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Error StackTrace:");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(e.StackTrace);
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Error InnerException:");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(e.InnerException);
+
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("Error Data:");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine(e.Data);
+
+                Console.ForegroundColor = ConsoleColor.Gray;
+
+                Console.ReadLine();
                 Console.Clear();
                 Menu();
             }
@@ -46,7 +80,9 @@
 
         private void PlayGame()
         {
-            Console.WriteLine("WELCOME TO THE GAMEZZZZ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("GAME START");
+            Console.ForegroundColor = ConsoleColor.Gray;
 
             string player1 = "";
             string player2 = "";
@@ -60,19 +96,47 @@
 
             while (player1 != "ROCK" && player1 != "PAPER" && player1 != "SCISSOR")
             {
+                Console.WriteLine("Please type in any of the three: ");
+
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine("ROCK");
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("PAPER");
+
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("SCISSOR");
+
+                Console.ForegroundColor = ConsoleColor.Gray;
                 player1 = Console.ReadLine();
                 player1 = player1.ToUpper();
+                Console.Clear();
 
-                Console.WriteLine("Player 1 chose: " + player1);
             }
+
+            Console.WriteLine("Player 1 chose: " + player1);
 
             while (player2 != "ROCK" && player2 != "PAPER" && player2 != "SCISSOR")
             {
+
+                Console.WriteLine("Please type in any of the three: ");
+
+                Console.ForegroundColor = ConsoleColor.DarkGray;
+                Console.WriteLine("ROCK");
+
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("PAPER");
+
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("SCISSOR");
+
+                Console.ForegroundColor = ConsoleColor.Gray;
                 player2 = Console.ReadLine();
                 player2 = player2.ToUpper();
+                Console.Clear();
 
-                Console.WriteLine("Player 2 chose: " + player2);
             }
+            Console.WriteLine("Player 2 chose: " + player2);
 
             Console.WriteLine("Player 1 = " + player1);
             Console.WriteLine("Player 2 = " + player2);
