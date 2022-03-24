@@ -66,13 +66,13 @@ namespace RockPaperScissors
             parameterValues.Add(new SqlParameter("username", username));
             parameterValues.Add(new SqlParameter("password", passwordhash));
 
-            string selectSql = baseSelectSQL + "where Username = @username and Passwordhash = @passwordhash";
+            string selectSql = baseSelectSQL + " where Username = @username and Passwordhash = @passwordhash";
             return (selectSql, parameterValues);
         }
 
         public static (string, List<SqlParameter>) SqlUser(string username, string passwordhash=null)
         {
-            string sql = baseSelectSQL + "here Username = @UserName";
+            string sql = baseSelectSQL + " where Username = @UserName";
             List<SqlParameter> parameterValues = new List<SqlParameter>();
             parameterValues.Add(new SqlParameter("@UserName", username));
             if (string.IsNullOrEmpty(passwordhash) == false)
