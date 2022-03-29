@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using System.Data.SqlClient; // <-- Nödvändig NuGet Package; för att kunna referera SQLparametrar
+using System.Text;
 
 namespace RockPaperScissors
 {
@@ -63,8 +64,8 @@ namespace RockPaperScissors
         public static (string, List<SqlParameter>) SqlLogin(string username, string passwordhash)
         {
             List<SqlParameter> parameterValues = new List<SqlParameter>();
-            parameterValues.Add(new SqlParameter("username", username));
-            parameterValues.Add(new SqlParameter("password", passwordhash));
+            parameterValues.Add(new SqlParameter("@Username", username));
+            parameterValues.Add(new SqlParameter("@PasswordHash", passwordhash));
 
             string selectSql = baseSelectSQL + " where Username = @username and Passwordhash = @passwordhash";
             return (selectSql, parameterValues);
@@ -77,8 +78,8 @@ namespace RockPaperScissors
             parameterValues.Add(new SqlParameter("@UserName", username));
             if (string.IsNullOrEmpty(passwordhash) == false)
             {
-                parameterValues.Add(new SqlParameter("password", passwordhash));
-                sql = sql + " and passwordhash = @passwordhash";
+                parameterValues.Add(new SqlParameter("@passwordhash", passwordhash));
+                sql = sql + " and PasswordHash = @passwordhash";
             }
             return (sql, parameterValues);
         }
@@ -220,13 +221,16 @@ namespace RockPaperScissors
 
     internal class TableDatabaseConnection //Osäker på detta namn, med "Program" kädnes för otydligt och kan lätt blandas ihop med det som sker i huvudapplikationen.
     {
-        private void PrintSuccess()
+        #region Shortcut Methods
+        private static void PrintSuccess()
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Success");
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Gray;
         }
+
+        #endregion Shortcut Method
 
         internal static void SqlToConsole()
         {
@@ -241,10 +245,7 @@ namespace RockPaperScissors
             ("Server=localhost;Database=RockPaperScissor;Trusted_Connection=True");
             ////////////////////////////////////////////////////////////////
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Success");
-
-            Console.ForegroundColor = ConsoleColor.Gray;
+            PrintSuccess();
 
             #endregion
 
@@ -256,10 +257,7 @@ namespace RockPaperScissors
 
             msgDB.RunQuery<User>(User.SqlAll());
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Success");
-
-            Console.ForegroundColor = ConsoleColor.Gray;
+            PrintSuccess();
 
             #endregion Retrieve Users
 
@@ -270,6 +268,7 @@ namespace RockPaperScissors
             {
                 Console.WriteLine(user.FirstName);
             }
+            Console.WriteLine("Press any key to continue...");
             Console.ReadLine();
 
             #region Create New User
@@ -294,10 +293,7 @@ namespace RockPaperScissors
 
             msgDB.ExecuteNoneQuery(User.SqlAdd(newUser));
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Success");
-
-            Console.ForegroundColor = ConsoleColor.Gray;
+            PrintSuccess();
 
             #endregion
 
@@ -305,15 +301,35 @@ namespace RockPaperScissors
 
             Console.WriteLine("Get User... ");
 
-            (string, List<SqlParameter>) tupel = User.SqlUser("");
-            var filteredUsers = msgDB.RunQuery<User>(tupel);
+            (string, List<SqlParameter>) tupel_GetUser = User.SqlUser("admin", "puttefnask");
+            var filteredUsers = msgDB.RunQuery<User>(tupel_GetUser);
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Success");
+            PrintSuccess();
 
-            Console.ForegroundColor = ConsoleColor.Gray;
+            //Login User
+
+            Console.WriteLine("Login User...");
+
+            (string, List<SqlParameter>) tupel_LoginUser = User.SqlLogin("admin", "puttefnask");
+            
+            var loginUser = msgDB.RunQuery<User>(tupel_LoginUser);
+
+            PrintSuccess();
+
+
+            //Planerar att seperera SQL Kommandon för egna och självständiga metoder; så att funktionerna kan användas seperat och utan att vara beroende av varandra.
+
+
+
+
+
 
         }
+
+
+       
+
+       
     }
 
 }
