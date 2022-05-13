@@ -15,19 +15,22 @@ namespace RockPaperScissors
         string userName,
         string firstName,
         string lastName,
+        string useremail,
+        string password,
         string passwordHash,
         string token,
         DateTime? tokenIssued,
 
         long wins,
         long losses,
-        long ties,
         long gamesPlayed) //end of parameter
         {
             UserID = userid;
             UserName = userName;
             FirstName = firstName;
             LastName = lastName;
+            UserEmail = useremail;
+            Password = password;
             PasswordHash = passwordHash;
             Token = token;
             TokenIssued = tokenIssued;
@@ -35,7 +38,6 @@ namespace RockPaperScissors
 
             Wins = wins;
             Losses = losses;
-            Ties = ties;
             GamesPlayed = gamesPlayed;
         }
 
@@ -43,6 +45,9 @@ namespace RockPaperScissors
         public string UserName { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public string UserEmail {  get; set; }
+        public string Password { get; set; }
         public string PasswordHash { get; set; }
         public string Token { get; set; }
         public DateTime? TokenIssued { get; set; }
@@ -50,11 +55,10 @@ namespace RockPaperScissors
 
         public long Wins { get; set; }
         public long Losses { get; set; }
-        public long Ties { get; set; }
 
         public long GamesPlayed { get; set; }
 
-        public static string baseSelectSQL => "select [UserID], [UserName], [FirstName], [LastName], [PasswordHash], [Token], [TokenIssued], [Wins], [Losses], [Ties], [GamesPlayed] from [User]";
+        public static string baseSelectSQL => "select [UserID], [UserName], [FirstName], [LastName], [UserEmail], [Password], [PasswordHash], [Token], [TokenIssued], [Wins], [Losses], [GamesPlayed] from [User]";
 
         public static string SqlAll()
         {
@@ -89,20 +93,21 @@ namespace RockPaperScissors
             List<SqlParameter> parameterValues = new List<SqlParameter>();
             parameterValues.Add(MessageDatabaseConnection.GetParameter("@FirstName", user.FirstName));
             parameterValues.Add(MessageDatabaseConnection.GetParameter("@LastName", user.LastName));
+            parameterValues.Add(MessageDatabaseConnection.GetParameter("@UserEmail", user.UserEmail));
+            parameterValues.Add(MessageDatabaseConnection.GetParameter("@Password", user.Password));
             parameterValues.Add(MessageDatabaseConnection.GetParameter("@PasswordHash", user.PasswordHash));
             parameterValues.Add(MessageDatabaseConnection.GetParameter("@Token", "NA"));
-            parameterValues.Add(MessageDatabaseConnection.GetParameter("@TokenIssued", "2022-03-23"));
+            parameterValues.Add(MessageDatabaseConnection.GetParameter("@TokenIssued", DateTime.Now));
             parameterValues.Add(MessageDatabaseConnection.GetParameter("@UserName", user.UserName));
 
             parameterValues.Add(MessageDatabaseConnection.GetParameter("@Wins", user.Wins));
             parameterValues.Add(MessageDatabaseConnection.GetParameter("@Losses", user.Losses));
-            parameterValues.Add(MessageDatabaseConnection.GetParameter("@Ties", user.Ties));
             parameterValues.Add(MessageDatabaseConnection.GetParameter("@GamesPlayed", user.GamesPlayed));
 
 
             return (@"insert into [User]
-                ([FirstName],[LastName],[PasswordHash],[Token],[TokenIssued],[UserName], [Wins], [Losses], [Ties], [GamesPlayed])
-                values (@Firstname, @Lastname, @PasswordHash,@Token, @TokenIssued, @UserName, @Wins, @Losses, @Ties, @GamesPlayed)",
+                ([UserName], [FirstName],[LastName],[UserEmail],[Password],[PasswordHash],[Token],[TokenIssued], [Wins], [Losses], [GamesPlayed])
+                values (@UserName, @Firstname, @Lastname, @UserEmail, @Password, @PasswordHash,@Token, @TokenIssued, @Wins, @Losses, @GamesPlayed)",
                 parameterValues);
         }
 
@@ -282,12 +287,13 @@ namespace RockPaperScissors
                 "UserName_" + unique,
                 "FirstName_" + unique,
                 "LastName_" + unique,
+                "UserEmail_" + unique,
+                "password",
                 "myhashedpassword",
                 null, //token
                 null, //tokenIssued
                 0 + unique, //wins
                 0 + unique, //loss
-                0 + unique, //ties
                 0 + unique //gamesplayed
                 );
 
